@@ -1,1 +1,1 @@
-[![HitCount](http://hits.dwyl.com/mateusalves/mateusalvesgithubio.svg)](http://hits.dwyl.com/mateusalves/mateusalvesgithubio)
+[![HitCount](http://hits.dwyl.io/mateusalves/mateusalvesgithubio.svg)](http://hits.dwyl.io/mateusalves/mateusalves.github.io)
