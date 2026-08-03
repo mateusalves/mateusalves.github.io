@@ -1,0 +1,26 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import '../styles/case.css';
+interface CaseNav { id: string; title: string }
+interface Props { title: string; description: string; eyebrow: string; status: string; outcome?: string; prev?: CaseNav; next?: CaseNav }
+const { title, description, eyebrow, status, outcome, prev, next } = Astro.props;
+const pageTitle = `${title} — Mateus Alves`;
+---
+<BaseLayout title={pageTitle} description={description}>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+  <Header />
+  <main id="case-main">
+    <header class="case-hero" id="top"><div class="case-grid" aria-hidden="true"></div><div class="case-shell">
+      <a class="back-link" href="/#work">← Back to selected work</a>
+      <p class="case-eyebrow">{eyebrow}</p><h1>{title}</h1><p class="case-lede">{description}</p>
+      <div class="case-meta"><span><small>Status</small>{status}</span>{outcome && <span><small>Measured outcome</small><strong>{outcome}</strong></span>}</div>
+    </div></header>
+    <article class="case-body"><slot /></article>
+    <nav class="case-pagination" aria-label="Case study navigation"><div class="case-shell">
+      {prev ? <a href={`/work/${prev.id}/`}><small>Previous case study</small><span>← {prev.title}</span></a> : <span></span>}
+      {next ? <a class="next" href={`/work/${next.id}/`}><small>Next case study</small><span>{next.title} →</span></a> : <a class="next" href="/#work"><small>Explore</small><span>Back to selected work →</span></a>}
+    </div></nav>
+  </main>
+  <footer><div class="container footer-inner"><p><strong>Mateus Alves</strong><span>Backend Software Engineer</span></p><div><a href="/#work">Selected work</a><a href="/#contact">Contact</a></div><small>Designed & built with Astro · © {new Date().getFullYear()}</small></div></footer>
+</BaseLayout>

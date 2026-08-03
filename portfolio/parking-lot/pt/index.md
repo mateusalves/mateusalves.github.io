@@ -1,2 +1,0 @@
-
-# Estacionamento Automatizado sem MCU

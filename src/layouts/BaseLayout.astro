@@ -1,0 +1,52 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import { site } from '../data/site';
+interface Props { title?: string; description?: string }
+const { title = site.title, description = site.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url);
+const measurementId = site.analytics.measurementId;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script is:inline>
+      (() => { try { const saved = localStorage.getItem('theme'); const dark = matchMedia('(prefers-color-scheme: dark)').matches; document.documentElement.dataset.theme = saved || (dark ? 'dark' : 'light'); } catch (_) {} })();
+    </script>
+    {measurementId && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}></script>}
+    {measurementId && <script is:inline define:vars={{ measurementId }}>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', measurementId);
+    </script>}
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c1220" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body><slot />
+    {measurementId && <script is:inline>
+      document.addEventListener('click', (event) => {
+        const target = event.target instanceof Element ? event.target.closest('[data-analytics-event]') : null;
+        if (!target || typeof window.gtag !== 'function') return;
+        const { analyticsEvent, analyticsLocation, analyticsCaseSlug, analyticsCaseTitle } = target.dataset;
+        if (!analyticsEvent) return;
+        const parameters = {};
+        if (analyticsLocation) parameters.location = analyticsLocation;
+        if (analyticsCaseSlug) parameters.case_slug = analyticsCaseSlug;
+        if (analyticsCaseTitle) parameters.case_title = analyticsCaseTitle;
+        window.gtag('event', analyticsEvent, parameters);
+      });
+    </script>}
+  </body>
+</html>

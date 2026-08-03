@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { site } from '../data/site';
+import { experience } from '../data/experience';
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <Header />
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="hero-kicker"><span></span>Backend · Systems · Performance</p>
+          <h1>Backend Software Engineer building <em>performance-critical</em> production systems.</h1>
+          <p class="hero-intro">I work primarily with C++ and Python across distributed systems, storage, performance, observability, AWS, and Kubernetes. My background spans embedded and backend engineering—shaping how I understand systems end to end and improve their behavior in production.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#work" data-analytics-event="work_cta_click" data-analytics-location="hero">View engineering work <Icon name="arrow" /></a>
+            <a class="button secondary" href={site.resume} data-analytics-event="resume_click" data-analytics-location="hero">Resume</a>
+            <a class="text-link" href={site.linkedin} target="_blank" rel="noreferrer" data-analytics-event="linkedin_click" data-analytics-location="hero">LinkedIn ↗</a>
+          </div>
+          <p class="hero-meta">Based in Brazil · Working globally</p>
+        </div>
+        <aside class="system-panel" aria-label="Engineering focus">
+          <div class="panel-bar"><span></span><span></span><span></span><b>engineering-focus.yml</b></div>
+          <div class="panel-body">
+            <div class="code-snippet" aria-hidden="true">
+              <span><i>01</i><code><b>primary:</b>   [ <em>C++</em>, <em>Python</em> ]</code></span>
+              <span><i>02</i><code><b>systems:</b>   [ <em>distributed</em>, <em>storage</em> ]</code></span>
+              <span><i>03</i><code><b>runtime:</b>   [ <em>performance</em>, <em>observability</em> ]</code></span>
+              <span><i>04</i><code><b>platform:</b>  [ <em>AWS</em>, <em>Kubernetes</em> ]</code></span>
+            </div>
+            <div class="panel-signal"><span></span>production-minded engineering</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section work-section" id="work">
+      <div class="container">
+        <SectionHeading index="01" eyebrow="Selected work" title="Engineering decisions, measured in real systems." copy="A selection of architecture, performance, and delivery work. Internal names and commercially sensitive details are intentionally omitted." />
+        <div class="work-list">{work.map((entry, i) => <WorkCard entry={entry} number={i + 1} />)}</div>
+      </div>
+    </section>
+
+    <section class="section experience-section" id="experience">
+      <div class="container">
+        <SectionHeading index="02" eyebrow="Experience" title="From constrained devices to distributed production systems." />
+        <div class="timeline">
+          {experience.map((item) => <article class="experience-item">
+            <div class="experience-meta"><span>{item.period}</span><h3>{item.company}</h3><p>{item.role}</p></div>
+            <div class="experience-copy"><p>{item.scope}</p><ul>{item.evidence.map((point) => <li>{point}</li>)}</ul></div>
+          </article>)}
+        </div>
+        <p class="section-link">For full employment history and education, see my <a href={site.resume} data-analytics-event="resume_click" data-analytics-location="experience">resume</a> or <a href={site.linkedin} target="_blank" rel="noreferrer" data-analytics-event="linkedin_click" data-analytics-location="experience">LinkedIn profile ↗</a>.</p>
+      </div>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="container about-grid">
+        <SectionHeading index="03" eyebrow="About" title="I like knowing what sits beneath the abstraction." />
+        <div class="about-copy">
+          <p class="large-copy">My path started in Electronic Engineering, moved through embedded systems, and grew into backend and distributed production software.</p>
+          <p>Working close to hardware taught me to question assumptions, measure real behavior, and understand the layers underneath an interface. That perspective still shapes how I approach backend systems: I follow problems across boundaries—application code, storage, infrastructure, and runtime behavior—until the whole picture makes sense.</p>
+          <p>I’m currently building more hands-on experience with Go and deepening my distributed-systems design knowledge, while continuing to build on a foundation in C++, Python, and production engineering.</p>
+          <div class="about-path" aria-label="Career path"><span>Electronic engineering</span><i>→</i><span>Embedded systems</span><i>→</i><span>Backend systems</span><i>→</i><span>Distributed systems</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <div class="container contact-grid">
+        <div><p class="section-kicker"><span>04</span>Contact</p><h2>Let’s talk about systems that need to work well in the real world.</h2></div>
+        <div class="contact-copy"><p>I’m open to backend and systems engineering opportunities where performance, reliability, and thoughtful technical decisions matter.</p><a class="button primary" href={`mailto:${site.email}`} data-analytics-event="email_click" data-analytics-location="contact">Email me <Icon name="arrow" /></a></div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="container footer-inner"><p><strong>Mateus Alves</strong><span>Backend Software Engineer</span></p><div><a href={`mailto:${site.email}`} data-analytics-event="email_click" data-analytics-location="footer">Email</a><a href={site.linkedin} data-analytics-event="linkedin_click" data-analytics-location="footer">LinkedIn</a><a href={site.github} data-analytics-event="github_click" data-analytics-location="footer">GitHub</a><a href={site.resume} data-analytics-event="resume_click" data-analytics-location="footer">Resume</a></div><small>Designed & built with Astro · © {new Date().getFullYear()}</small></div></footer>
+</BaseLayout>

@@ -1,0 +1,50 @@
+---
+import Icon from './Icon.astro';
+import { navigation, site } from '../data/site';
+const onHome = Astro.url.pathname === '/';
+const localHref = (href: string) => !onHome && href.startsWith('#') ? `/${href}` : href;
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href={onHome ? '#top' : '/'} aria-label="Mateus Alves, back to top"><span>MA</span><i></i></a>
+    <nav id="site-nav" aria-label="Primary navigation">
+      {navigation.map((item) => <a href={localHref(item.href)} data-analytics-event={item.label === 'Resume' ? 'resume_click' : undefined} data-analytics-location={item.label === 'Resume' ? 'header' : undefined}>{item.label}</a>)}
+      <span class="nav-divider"></span>
+      <a class="icon-link" href={site.github} target="_blank" rel="noreferrer" aria-label="GitHub" data-analytics-event="github_click" data-analytics-location="header"><Icon name="github" /></a>
+      <a class="icon-link" href={site.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" data-analytics-event="linkedin_click" data-analytics-location="header"><Icon name="linkedin" /></a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="light-icon"><Icon name="moon" /></span><span class="dark-icon"><Icon name="sun" /></span></button>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span class="menu-icon"><Icon name="menu" /></span><span class="close-icon"><Icon name="close" /></span></button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  const updateThemeButton = (theme: string | undefined) => {
+    const target = theme === 'dark' ? 'light' : 'dark';
+    themeButton?.setAttribute('aria-label', `Switch to ${target} mode`);
+    themeButton?.setAttribute('title', `Switch to ${target} mode`);
+  };
+  updateThemeButton(document.documentElement.dataset.theme);
+  themeButton?.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme;
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    updateThemeButton(next);
+  });
+  const navButton = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.querySelector<HTMLElement>('#site-nav');
+  navButton?.addEventListener('click', () => {
+    const open = navButton.getAttribute('aria-expanded') === 'true';
+    navButton.setAttribute('aria-expanded', String(!open));
+    navButton.setAttribute('aria-label', open ? 'Open navigation' : 'Close navigation');
+    nav?.classList.toggle('is-open', !open);
+  });
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+    navButton?.setAttribute('aria-expanded', 'false');
+    nav?.classList.remove('is-open');
+  }));
+</script>
