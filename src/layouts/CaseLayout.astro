@@ -3,8 +3,8 @@ import BaseLayout from './BaseLayout.astro';
 import Header from '../components/Header.astro';
 import '../styles/case.css';
 interface CaseNav { id: string; title: string }
-interface Props { title: string; description: string; eyebrow: string; status: string; outcome?: string; prev?: CaseNav; next?: CaseNav }
-const { title, description, eyebrow, status, outcome, prev, next } = Astro.props;
+interface Props { title: string; description: string; eyebrow: string; status: string; outcome?: string; prev?: CaseNav; next?: CaseNav; variant?: string }
+const { title, description, eyebrow, status, outcome, prev, next, variant } = Astro.props;
 const pageTitle = `${title} — Mateus Alves`;
 ---
 <BaseLayout title={pageTitle} description={description}>
@@ -16,8 +16,8 @@ const pageTitle = `${title} — Mateus Alves`;
       <p class="case-eyebrow">{eyebrow}</p><h1>{title}</h1><p class="case-lede">{description}</p>
       <div class="case-meta"><span><small>Status</small>{status}</span>{outcome && <span><small>Measured outcome</small><strong>{outcome}</strong></span>}</div>
     </div></header>
-    <article class="case-body"><slot /></article>
-    <nav class="case-pagination" aria-label="Case study navigation"><div class="case-shell">
+    <article class:list={["case-body", variant]}><slot /></article>
+    <nav class:list={["case-pagination", variant]} aria-label="Case study navigation"><div class="case-shell">
       {prev ? <a href={`/work/${prev.id}/`}><small>Previous case study</small><span>← {prev.title}</span></a> : <span></span>}
       {next ? <a class="next" href={`/work/${next.id}/`}><small>Next case study</small><span>{next.title} →</span></a> : <a class="next" href="/#work"><small>Explore</small><span>Back to selected work →</span></a>}
     </div></nav>
