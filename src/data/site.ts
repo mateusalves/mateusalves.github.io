@@ -1,6 +1,6 @@
 export const site = {
   name: 'Mateus Alves',
-  title: 'Mateus Alves — Backend Software Engineer',
+  title: 'Mateus Alves | Backend Software Engineer',
   description: 'Backend Software Engineer working with C++, Python, distributed systems, storage, performance, observability, AWS, and Kubernetes.',
   url: 'https://mateusalves.dev',
   email: 'mateus.alves.rch@gmail.com',

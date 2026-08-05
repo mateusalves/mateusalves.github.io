@@ -21,10 +21,10 @@ const { type } = Astro.props;
     <p class="diagram-note"><b>Boundary:</b> snapshot distribution and failure semantics remain under architecture review.</p>
   </>}
   {type === 'processing' && <>
-    <figcaption><strong>One guarantee, applied twice</strong><span>Same required output · less work</span></figcaption>
+    <figcaption><span>Same required output · less work</span></figcaption>
     <div class="compare" role="img" aria-label="Before: indexed database ordering passed through sorted pagination and redundant work before processing. After: indexed database ordering passes through regular pagination directly to processing.">
-      <section><span>Before · redundant guarantee</span><div class="mini-flow"><b>Database<br/><small>indexed access</small></b><i><small>ordered</small>→</i><b>Sorted pagination</b><i><small>sort again</small>→</i><b class="crossed">Unnecessary work</b><i>→</i><b>Processing service</b></div><p>Indexed access already supplied the ordering this path required.</p></section>
-      <section class="after"><span>After · sufficient contract</span><div class="mini-flow"><b>Database<br/><small>indexed access</small></b><i><small>ordered</small>→</i><b>Regular pagination</b><i><small>preserved</small>→</i><b>Processing service</b></div><p>Remove the redundant guarantee while preserving output correctness.</p></section>
+      <section><span>Before · sorted pagination</span><div class="mini-flow"><b>Database<br/><small>indexed access</small></b><i><small>ordered</small>→</i><b>Sorted pagination</b><i><small>sort again</small>→</i><b class="crossed">Unnecessary work</b><i>→</i><b>Processing service</b></div><p>Indexed access already supplied the ordering this path required.</p></section>
+      <section class="after"><span>After · regular pagination</span><div class="mini-flow"><b>Database<br/><small>indexed access</small></b><i><small>ordered</small>→</i><b>Regular pagination</b><i><small>preserved</small>→</i><b>Processing service</b></div><p>Remove the redundant guarantee while preserving output correctness.</p></section>
     </div>
   </>}
   {type === 'rollout' && <>
@@ -32,18 +32,17 @@ const { type } = Astro.props;
     <ol class="steps" aria-label="Validation and rollout sequence"><li><span>01</span><b>Output equivalence</b></li><li><span>02</span><b>Canary</b></li><li><span>03</span><b>Production monitoring</b></li></ol>
   </>}
   {type === 'routing' && <>
-    <figcaption><strong>Classification before shared processing</strong><span>New semantics travel as an internal signal</span></figcaption>
+    <figcaption><strong>Classification before shared processing</strong><span>Classification is carried as an internal signal</span></figcaption>
     <div class="route" role="img" aria-label="The existing request path classifies pause inventory early, carries an internal signal through the existing pipeline, and isolates pause-specific matching from normal video behavior before producing a response.">
       <div class="route-stage request"><small>01 · input</small><b>Existing request path</b></div><i><span>classify early</span>→</i><div class="route-stage classifier"><small>02 · classification</small><b>Pause inventory detection</b></div><i><span>carry meaning</span>→</i><div class="route-stage shared"><small>03 · shared path</small><b>Existing serving pipeline</b><em>internal semantic signal</em></div><i><span>bounded behavior</span>→</i><div class="route-stage matching"><small>04 · isolated branch</small><b>Pause-specific matching</b></div><i><span>serve</span>→</i><div class="route-stage response"><small>05 · output</small><b>Response</b></div>
       <div class="normal-guard"><span>Normal traffic</span><b>Existing behavior preserved</b><i>→</i></div>
     </div>
   </>}
   {type === 'sequencing' && <>
-    <figcaption><strong>A sequencing decision, not a rejection of the long-term model</strong></figcaption>
     <div class="sequence" role="img" aria-label="A dedicated model offers cleaner long-term semantics with much larger cross-stack scope. An incremental first release offers smaller scope and faster launch while deliberately accepting future debt.">
-      <section><span>Long-term direction</span><h3>Dedicated model now</h3><ul><li>Cleaner, extensible semantics</li><li>Much larger cross-stack scope</li><li>Higher initial delivery risk</li></ul></section>
-      <div class="sequence-mark"><small>sequence<br/>the change</small><b>→</b></div>
-      <section class="selected"><span>Chosen first release</span><h3>Incremental first release</h3><ul><li>Reuse the existing model and path</li><li>Smaller blast radius · faster launch</li><li>Deliberate migration need later</li></ul></section>
+      <section><span>Long-term direction</span><h3>Dedicated model</h3><ul><li>Cleaner semantics</li><li>Easier to extend</li><li>Larger cross-stack scope</li><li>More work before first launch</li></ul></section>
+      <div class="sequence-mark"><b>→</b></div>
+      <section class="selected"><span>Chosen first release</span><h3>Incremental first release</h3><ul><li>Reuse existing model and path</li><li>Smaller initial scope</li><li>Faster first delivery</li><li>Migration work remains</li></ul></section>
     </div>
   </>}
   {type === 'rollout-three' && <>

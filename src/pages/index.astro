@@ -17,9 +17,10 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
       <div class="hero-grid" aria-hidden="true"></div>
       <div class="container hero-inner">
         <div class="hero-copy">
+          <p class="hero-greeting">Hi, I'm Mateus.</p>
           <p class="hero-kicker"><span></span>Backend · Systems · Performance</p>
           <h1>Backend Software Engineer building <em>performance-critical</em> production systems.</h1>
-          <p class="hero-intro">I work primarily with C++ and Python across distributed systems, storage, performance, observability, AWS, and Kubernetes. My background spans embedded and backend engineering—shaping how I understand systems end to end and improve their behavior in production.</p>
+          <p class="hero-intro">I work primarily with C++ and Python on backend systems where performance, storage, and production behavior matter. Before moving into backend engineering, I spent several years closer to hardware and embedded systems. That background still shapes how I approach software end to end.</p>
           <div class="hero-actions">
             <a class="button primary" href="#work" data-analytics-event="work_cta_click" data-analytics-location="hero">View engineering work <Icon name="arrow" /></a>
             <a class="button secondary" href={site.resume} data-analytics-event="resume_click" data-analytics-location="hero">Resume</a>
@@ -44,14 +45,14 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
 
     <section class="section work-section" id="work">
       <div class="container">
-        <SectionHeading index="01" eyebrow="Selected work" title="Engineering decisions, measured in real systems." copy="A selection of architecture, performance, and delivery work. Internal names and commercially sensitive details are intentionally omitted." />
+        <SectionHeading index="01" eyebrow="Selected work" title="Selected engineering work" copy="A few engineering problems I've worked through in production systems, including performance, data distribution, and extending existing serving paths. Some internal details have been generalized or omitted." />
         <div class="work-list">{work.map((entry, i) => <WorkCard entry={entry} number={i + 1} />)}</div>
       </div>
     </section>
 
     <section class="section experience-section" id="experience">
       <div class="container">
-        <SectionHeading index="02" eyebrow="Experience" title="From constrained devices to distributed production systems." />
+        <div class="experience-heading"><p class="section-kicker"><span>02</span>Experience</p></div>
         <div class="timeline">
           {experience.map((item) => <article class="experience-item">
             <div class="experience-meta"><span>{item.period}</span><h3>{item.company}</h3><p>{item.role}</p></div>
@@ -66,18 +67,21 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
       <div class="container about-grid">
         <SectionHeading index="03" eyebrow="About" title="I like knowing what sits beneath the abstraction." />
         <div class="about-copy">
-          <p class="large-copy">My path started in Electronic Engineering, moved through embedded systems, and grew into backend and distributed production software.</p>
-          <p>Working close to hardware taught me to question assumptions, measure real behavior, and understand the layers underneath an interface. That perspective still shapes how I approach backend systems: I follow problems across boundaries—application code, storage, infrastructure, and runtime behavior—until the whole picture makes sense.</p>
-          <p>I’m currently building more hands-on experience with Go and deepening my distributed-systems design knowledge, while continuing to build on a foundation in C++, Python, and production engineering.</p>
+          <p class="large-copy">I started in electronics and embedded systems, where software was always connected to something physical. Over time I moved toward backend and production systems, but I kept the same habit: I want to understand how the layers underneath behave, especially when performance or reliability depends on them.</p>
+          <p>Today I work mainly with C++ and Python. I'm particularly interested in distributed systems, storage, performance, and production problems that require tracing behavior across more than one layer.</p>
+          <p>I'm currently building more hands-on experience with Go and deepening my distributed-systems design knowledge. I also still enjoy the builder side of engineering and projects that bring software and hardware together.</p>
           <div class="about-path" aria-label="Career path"><span>Electronic engineering</span><i>→</i><span>Embedded systems</span><i>→</i><span>Backend systems</span><i>→</i><span>Distributed systems</span></div>
         </div>
       </div>
     </section>
 
     <section class="section contact-section" id="contact">
-      <div class="container contact-grid">
-        <div><p class="section-kicker"><span>04</span>Contact</p><h2>Let’s talk about systems that need to work well in the real world.</h2></div>
-        <div class="contact-copy"><p>I’m open to backend and systems engineering opportunities where performance, reliability, and thoughtful technical decisions matter.</p><a class="button primary" href={`mailto:${site.email}`} data-analytics-event="email_click" data-analytics-location="contact">Email me <Icon name="arrow" /></a></div>
+      <div class="container">
+        <p class="section-kicker contact-kicker"><span>04</span>Contact</p>
+        <div class="contact-grid">
+          <h2>Interested in working together?</h2>
+          <div class="contact-copy"><p>I'm currently open to backend and systems engineering opportunities, particularly roles involving performance, distributed systems, storage, or production-scale software.</p><a class="button primary" href={`mailto:${site.email}`} data-analytics-event="email_click" data-analytics-location="contact">Email me <Icon name="arrow" /></a></div>
+        </div>
       </div>
     </section>
   </main>

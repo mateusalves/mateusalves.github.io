@@ -10,9 +10,9 @@ const href = published ? `/work/${entry.id}/` : undefined;
     <div class="work-card-top"><span class="work-number">0{number}</span><span class="work-status">{entry.data.status}</span></div>
     <p class="eyebrow">{entry.data.eyebrow}</p>
     <h3>{entry.data.title}</h3>
-    <p class="work-summary">{entry.data.summary}</p>
+    <p class="work-summary">{entry.data.homepageSummary ?? entry.data.summary}</p>
     <div class="work-footer">
-      {published ? (entry.data.outcome ? <strong>{entry.data.outcome}</strong> : <span>Read case study</span>) : <span>Case study in progress</span>}
+      {published ? <span>Read case study</span> : <span>Case study in progress</span>}
       <span class="card-arrow"><Icon name="arrow" /></span>
     </div>
   </CardTag>

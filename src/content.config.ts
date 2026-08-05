@@ -9,6 +9,7 @@ const work = defineCollection({
     eyebrow: z.string(),
     outcome: z.string().optional(),
     summary: z.string(),
+    homepageSummary: z.string().optional(),
     status: z.string(),
     published: z.boolean().default(false),
   }),

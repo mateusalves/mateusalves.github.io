@@ -2,7 +2,8 @@
 order: 1
 title: Designing a Memory-Efficient Data Distribution Architecture
 eyebrow: Architecture · Storage · Scale
-summary: A producer-side OOM investigation exposed full-dataset materialization in both export and serving. I evaluated alternatives, tested LMDB in a POC with production-representative data, and designed a local-snapshot architecture that keeps remote lookups outside the hot path.
+summary: I started by investigating OOM failures in a data export path. While tracing where the generated artifact went next, I found that the serving side made the same full-dataset assumption. That led me to evaluate alternative designs, prototype LMDB with data representative of production scale, and propose a local snapshot architecture for serving lookups.
+homepageSummary: I started by investigating OOM failures in a data-export path. Tracing the data further exposed the same full-dataset assumption on the serving side, which led me to evaluate alternative designs and prototype a local LMDB snapshot approach.
 status: Design · Validation · Architecture review
 published: true
 ---

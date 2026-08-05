@@ -5,7 +5,7 @@ import '../styles/case.css';
 interface CaseNav { id: string; title: string }
 interface Props { title: string; description: string; eyebrow: string; status: string; outcome?: string; prev?: CaseNav; next?: CaseNav; variant?: string }
 const { title, description, eyebrow, status, outcome, prev, next, variant } = Astro.props;
-const pageTitle = `${title} — Mateus Alves`;
+const pageTitle = `${title} | Mateus Alves`;
 ---
 <BaseLayout title={pageTitle} description={description}>
   <a class="skip-link" href="#case-main">Skip to content</a>
