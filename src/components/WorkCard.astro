@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+const { entry, number } = Astro.props;
+const published = entry.data.published;
+const CardTag = published ? 'a' : 'div';
+const href = published ? `/work/${entry.id}/` : undefined;
+---
+<article class="work-card">
+  <CardTag class:list={{ 'work-card-content': true, 'is-unpublished': !published }} href={href} aria-label={published ? entry.data.title : undefined} data-analytics-event={published ? 'case_study_click' : undefined} data-analytics-location={published ? 'engineering_work' : undefined} data-analytics-case-slug={published ? entry.id : undefined} data-analytics-case-title={published ? entry.data.title : undefined}>
+    <div class="work-card-top"><span class="work-number">0{number}</span><span class="work-status">{entry.data.status}</span></div>
+    <p class="eyebrow">{entry.data.eyebrow}</p>
+    <h3>{entry.data.title}</h3>
+    <p class="work-summary">{entry.data.homepageSummary ?? entry.data.summary}</p>
+    <div class="work-footer">
+      {published ? <span>Read case study</span> : <span>Case study in progress</span>}
+      <span class="card-arrow"><Icon name="arrow" /></span>
+    </div>
+  </CardTag>
+</article>

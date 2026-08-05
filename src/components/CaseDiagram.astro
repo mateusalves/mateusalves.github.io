@@ -1,0 +1,51 @@
+---
+interface Props { type: 'distribution-existing' | 'distribution-proposed' | 'processing' | 'rollout' | 'rollout-three' | 'routing' | 'sequencing' }
+const { type } = Astro.props;
+---
+<figure class={`case-diagram diagram-${type}`}>
+  {type === 'distribution-existing' && <>
+    <figcaption><strong>Existing system</strong><span>Two points materialize the complete dataset</span></figcaption>
+    <div class="architecture existing-architecture" role="img" aria-label="The producer fully scans a distributed data store into an export service, materializes the full dataset and serializes an artifact to object storage. The serving side downloads that artifact and materializes the full dataset again in application memory.">
+      <section class="system-boundary producer-boundary"><header><span>01</span><b>Producer side</b><small>Immediate failure path</small></header><div class="system-flow"><div class="node datastore"><small>datastore</small><b>Distributed data store</b></div><i><span>full scan</span>→</i><div class="node runtime pressure"><small>runtime</small><b>Export service</b><em>Full dataset materialized</em></div><i><span>serialize</span>→</i><div class="node artifact"><small>artifact</small><b>Serialized artifact</b></div></div><p class="pressure-callout"><b>Memory pressure / OOM</b><span>Immediate problem</span></p></section>
+      <div class="storage-bridge"><div class="node storage"><small>shared boundary</small><b>Object storage</b></div></div>
+      <section class="system-boundary serving-boundary"><header><span>02</span><b>Serving side</b><small>Architectural limitation discovered</small></header><div class="system-flow"><div class="node artifact"><small>artifact</small><b>Stored snapshot</b></div><i><span>download</span>→</i><div class="node runtime pressure secondary"><small>application runtime</small><b>Serving layer</b><em>Full dataset materialized in memory</em></div></div><p class="pressure-callout secondary"><b>Architectural constraint</b><span>Not an observed incident</span></p></section>
+    </div>
+  </>}
+  {type === 'distribution-proposed' && <>
+    <figcaption><strong>Proposed architecture</strong><span>Local reads keep remote lookups outside the hot path</span></figcaption>
+    <div class="architecture proposed-architecture" role="img" aria-label="Snapshot generation scans the data store and builds an LMDB snapshot. Distribution moves it through object storage to a serving node, where local read-only LMDB supports membership lookup and remote lookups remain outside the hot path.">
+      <section class="system-boundary generation-boundary"><header><span>01</span><b>Snapshot generation</b></header><div class="system-flow"><div class="node datastore"><small>source</small><b>Data store</b></div><i><span>scan / build</span>→</i><div class="node lmdb"><small>snapshot</small><b>LMDB snapshot</b><em>compact keys</em></div></div></section>
+      <section class="system-boundary distribution-boundary under-review"><header><span>02</span><b>Distribution</b><small>Under review</small></header><div class="system-flow"><div class="node storage"><small>artifact store</small><b>Object storage</b></div><i><span>snapshot distribution</span>→</i></div><p>Publication · activation · rollback · failure semantics</p></section>
+      <section class="system-boundary serving-node"><header><span>03</span><b>Serving node</b></header><div class="serving-stack"><div class="node lmdb"><small>local · read-only</small><b>LMDB</b></div><i>→</i><div class="node lookup"><small>hot path</small><b>Membership lookup</b></div></div><p class="hot-path-note">Remote lookups stay outside the hot path.</p></section>
+    </div>
+    <p class="diagram-note"><b>Boundary:</b> snapshot distribution and failure semantics remain under architecture review.</p>
+  </>}
+  {type === 'processing' && <>
+    <figcaption><span>Same required output · less work</span></figcaption>
+    <div class="compare" role="img" aria-label="Before: indexed database ordering passed through sorted pagination and redundant work before processing. After: indexed database ordering passes through regular pagination directly to processing.">
+      <section><span>Before · sorted pagination</span><div class="mini-flow"><b>Database<br/><small>indexed access</small></b><i><small>ordered</small>→</i><b>Sorted pagination</b><i><small>sort again</small>→</i><b class="crossed">Unnecessary work</b><i>→</i><b>Processing service</b></div><p>Indexed access already supplied the ordering this path required.</p></section>
+      <section class="after"><span>After · regular pagination</span><div class="mini-flow"><b>Database<br/><small>indexed access</small></b><i><small>ordered</small>→</i><b>Regular pagination</b><i><small>preserved</small>→</i><b>Processing service</b></div><p>Remove the redundant guarantee while preserving output correctness.</p></section>
+    </div>
+  </>}
+  {type === 'rollout' && <>
+    <figcaption><strong>Validation and rollout</strong></figcaption>
+    <ol class="steps" aria-label="Validation and rollout sequence"><li><span>01</span><b>Output equivalence</b></li><li><span>02</span><b>Canary</b></li><li><span>03</span><b>Production monitoring</b></li></ol>
+  </>}
+  {type === 'routing' && <>
+    <figcaption><strong>Classification before shared processing</strong><span>Classification is carried as an internal signal</span></figcaption>
+    <div class="route" role="img" aria-label="The existing request path classifies pause inventory early, carries an internal signal through the existing pipeline, and isolates pause-specific matching from normal video behavior before producing a response.">
+      <div class="route-stage request"><small>01 · input</small><b>Existing request path</b></div><i><span>classify early</span>→</i><div class="route-stage classifier"><small>02 · classification</small><b>Pause inventory detection</b></div><i><span>carry meaning</span>→</i><div class="route-stage shared"><small>03 · shared path</small><b>Existing serving pipeline</b><em>internal semantic signal</em></div><i><span>bounded behavior</span>→</i><div class="route-stage matching"><small>04 · isolated branch</small><b>Pause-specific matching</b></div><i><span>serve</span>→</i><div class="route-stage response"><small>05 · output</small><b>Response</b></div>
+      <div class="normal-guard"><span>Normal traffic</span><b>Existing behavior preserved</b><i>→</i></div>
+    </div>
+  </>}
+  {type === 'sequencing' && <>
+    <div class="sequence" role="img" aria-label="A dedicated model offers cleaner long-term semantics with much larger cross-stack scope. An incremental first release offers smaller scope and faster launch while deliberately accepting future debt.">
+      <section><span>Long-term direction</span><h3>Dedicated model</h3><ul><li>Cleaner semantics</li><li>Easier to extend</li><li>Larger cross-stack scope</li><li>More work before first launch</li></ul></section>
+      <div class="sequence-mark"><b>→</b></div>
+      <section class="selected"><span>Chosen first release</span><h3>Incremental first release</h3><ul><li>Reuse existing model and path</li><li>Smaller initial scope</li><li>Faster first delivery</li><li>Migration work remains</li></ul></section>
+    </div>
+  </>}
+  {type === 'rollout-three' && <>
+    <ol class="steps rollout-three" aria-label="Implementation and rollout sequence"><li><span>01</span><b>Implementation<br/>and tests</b></li><li><span>02</span><b>Staged<br/>rollout</b></li><li><span>03</span><b>Pilot<br/>validation</b></li><li><span>04</span><b>Launch</b></li></ol>
+  </>}
+</figure>
